@@ -28,11 +28,10 @@ public class AlumnosCEAPI extends HttpServlet {
     private final String DNI_PATH = "dni";
     private final String PROF_ASIG_PATH = "profsasig";
 
-    private final String PATH_IMAGES = "/WEB-INF/img";
     private final String ACRONIMO_ASIG_PARAM = "acron";
     private final String ERR_ASIG = "La asignatura solicitada o no existe o el alumno no está matriculado en ella.";
     private final String ERR_DEFAULT = "No tienes permisos";
-
+    private final int ERROR_CODE= 403;
     public AlumnosCEAPI() {
         super();
         this.asigAlumnos= new ConcurrentHashMap<>();
@@ -40,7 +39,6 @@ public class AlumnosCEAPI extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nombreMaquina = request.getServerName();
         HttpSession session = request.getSession(false);
-        List<Cookie> cookies = (List<Cookie>) session.getAttribute("cookie");
         //TODO manejar las cookies
         String dni = session.getAttribute(DNI_PARAM).toString();
         String key = session.getAttribute(KEY_PARAM).toString();
@@ -51,40 +49,28 @@ public class AlumnosCEAPI extends HttpServlet {
         if(request.isUserInRole(DEFAULT_ROLE)) {
             String param = request.getParameter(QUERRY_PARAM);
             response.setContentType("application/json");
-            if(param.equals(AVATAR_PATH)) {
-                JSONObject responseJSON = new JSONObject();
-
-                ServletContext context = getServletContext();
-                String pathToAvatar = context.getRealPath(PATH_IMAGES);
-                response.setContentType("text/plain");
-                response.setCharacterEncoding("UTF-8");
-                BufferedReader origen = new BufferedReader(new FileReader(pathToAvatar+"/"+dni+".pngb64"));
-
-                responseJSON.put(DNI_PARAM,dni);
-                PrintWriter out = response.getWriter();
-                String linea ="";
-                while ((linea += origen.readLine()) != null);
-                responseJSON.put("img",linea);
-                out.println(responseJSON.toString());
-                out.close(); origen.close();
-            }else if(param.equals(ASIG_PATH)) {
+            if(param.equals(ASIG_PATH)) {
+                //Obtiene las asignaturas del alumno
                 url = "http://"+nombreMaquina+":9090/CentroEducativo/alumnos/"+dni+"/asignaturas?key="+key;
 
             } else if(param.equals(DNI_PATH)) {
+                //Obtiene el alumno?
                 url = "http://"+nombreMaquina+":9090/CentroEducativo/alumnos/"+dni+"?key="+key;
             } else if(param.equals(DETALLES_ASIG_PATH)) {
+                //Detalles de la asignatura
                 String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
                 if(alumnoIsInAsig(acronimo,dni)) {
                     url = "http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"?key="+key;
                 }else {
-                    response.sendError(403, ERR_ASIG);
+                    response.sendError(ERROR_CODE, ERR_ASIG);
                 }
             }else if(param.equals(PROF_ASIG_PATH)) {
+                //Todos los profesores de una asignatura
                 String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
                 if(alumnoIsInAsig(acronimo,dni)) {
                     url = "http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"/profesores?key="+key;
                 }else {
-                    response.sendError(403, ERR_ASIG);
+                    response.sendError(ERROR_CODE, ERR_ASIG);
                 }
             }
 
