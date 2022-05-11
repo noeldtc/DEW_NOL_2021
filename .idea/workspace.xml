@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2519dc3-e5e0-4bcc-bb5e-b90131a1039f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/prueba.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/AlumnosCEAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AlumnosCEAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Authentification.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/certificado.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/certificado.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/prueba.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,14 +38,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "K:/My Programs/Java/DEW/src/main/java"
   }
-}</component>
-  <component name="RunManager" selected="Application.prueba">
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="K:\My Programs\Java\DEW\src\main\java" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JavaScript Debug.certificado.html">
     <configuration name="prueba" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="prueba" />
       <module name="DEW" />
@@ -57,9 +66,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="certificado.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/DEW/certificado.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/DEW/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.certificado.html" />
         <item itemvalue="Application.prueba" />
+        <item itemvalue="JavaScript Debug.index.html" />
         <item itemvalue="Application.test" />
       </list>
     </recent_temporary>
@@ -73,7 +90,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652088609403</updated>
       <workItem from="1652088611912" duration="3638000" />
-      <workItem from="1652288464643" duration="610000" />
+      <workItem from="1652288464643" duration="5184000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1652092155601</created>
@@ -82,7 +99,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652092155601</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="V3">
+      <created>1652289344215</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1652289344215</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -90,6 +114,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="First commit" />
+    <MESSAGE value="V3" />
+    <option name="LAST_COMMIT_MESSAGE" value="V3" />
   </component>
 </project>

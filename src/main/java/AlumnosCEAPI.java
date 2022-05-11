@@ -3,6 +3,7 @@ import okhttp3.OkHttpClient;
 
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
@@ -24,11 +25,10 @@ public class AlumnosCEAPI extends HttpServlet {
     private final String KEY_PARAM = "key";
 
     private final String ROL_ALU="rolalu";
-    private final String ROL_PROF= "rolprof";
     private final String ASIG_PATH = "asignaturas";
     private final String DETALLES_ASIG_PATH = "detallesasig";
     private final String DNI_PATH = "dni";
-    private final String PROF_ASIG_PATH = "profsasig";
+    private final String CERT_PATH = "cert";
 
     private final String ACRONIMO_ASIG_PARAM = "acron";
     private final String ERR_ASIG = "La asignatura solicitada o no existe o el alumno no está matriculado en ella.";
@@ -52,31 +52,34 @@ public class AlumnosCEAPI extends HttpServlet {
             String param = request.getParameter(QUERRY_PARAM);
             response.setContentType("application/json");
             if(param.equals(ASIG_PATH)) {
-                //Obtiene las asignaturas del alumno
+                //Consultar la lista de asignaturas
+                //en las que está matriculada
                 url = "http://"+nombreMaquina+":9090/CentroEducativo/alumnos/"+dni+"/asignaturas?key="+key;
 
-            } else if(param.equals(DNI_PATH)) {
-                //Obtiene los detalles del aluno?
-                url = "http://"+nombreMaquina+":9090/CentroEducativo/alumnos/"+dni+"?key="+key;
             } else if(param.equals(DETALLES_ASIG_PATH)) {
                 //Consulta la nota obtenida en una asignatura
-                //String url ="http://dew-ecergon-2122.dsicv.upv.es:9090/CentroEducativo/asignaturas/DEW/alumnos?key=%27$key";
                 String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
-                if(alumnoIsInAsig(acronimo,dni)) {
-                    url = "http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"?key="+key;
-                }else {
-                    response.sendError(ERROR_CODE, ERR_ASIG);
+                //Consulta las notas de la asignatura
+                Request consulta_notas = new Request.Builder().url("http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"/alumnos?key="+key).build();
+                Response responseNotas = httpClient.newCall(consulta_notas).execute();
+                if(responseNotas.isSuccessful()){
+                    JSONArray notas = new JSONArray(responseNotas.body().string());
+                    for(int i =0; i < notas.length() && notas.getJSONObject(i).has("dni");i++){
+                        String dni_alumno = notas.getJSONObject(i).getString("dni");
+                        if(dni_alumno.equals(dni)){
+                            //Es este la nota del alumno
+                            response.getWriter().append(notas.getJSONObject(i).getInt("nota")+"");
+                            return;
+                        }
+                    }
                 }
-            }else if(param.equals(DETALLES_ASIG_PATH)) {
-                //Detalles de la asignatura
-                String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
-                if(alumnoIsInAsig(acronimo,dni)) {
-                    url = "http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"?key="+key;
-                }else {
-                    response.sendError(ERROR_CODE, ERR_ASIG);
-                }
-            }else if(param.equals(PROF_ASIG_PATH)) {
-                //Creación del certificado
+                responseNotas.close();
+                //No se ha encontrado el usuario en la asignatura
+                response.sendError(ERROR_CODE, ERR_ASIG);
+
+            }else if(param.equals(CERT_PATH)) {
+                //TODO Creación del certificado
+
             }
 
             if(!url.equals("")) {
@@ -97,7 +100,7 @@ public class AlumnosCEAPI extends HttpServlet {
 
             }
             else {
-                response.setStatus(401);
+                response.setStatus(ERROR_CODE);
                 response.getWriter().append(ERR_DEFAULT);
                 return;
             }
@@ -116,6 +119,10 @@ public class AlumnosCEAPI extends HttpServlet {
         if(asigAlumnos.containsKey(dni)) asigAlumnos.put(dni,asigAlumnos.get(dni) + ","+acron_asig);
         else asigAlumnos.put(dni,acron_asig);
     }
+
+
+
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
