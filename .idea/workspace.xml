@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2519dc3-e5e0-4bcc-bb5e-b90131a1039f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/AlumnosCEAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AlumnosCEAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Authentification.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/certificado.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/certificado.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/prueba.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +86,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652088609403</updated>
       <workItem from="1652088611912" duration="3638000" />
-      <workItem from="1652288464643" duration="5184000" />
+      <workItem from="1652288464643" duration="5519000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1652092155601</created>
@@ -106,7 +102,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652289344215</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="V3">
+      <created>1652293737438</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1652293737438</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

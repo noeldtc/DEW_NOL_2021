@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AlumnosCEAPI extends HttpServlet {
 
-    private Map<String,String> asigAlumnos;
     private final String QUERRY_PARAM = "args";
     private final String DNI_PARAM = "dni";
     private final String KEY_PARAM = "key";
@@ -27,16 +26,13 @@ public class AlumnosCEAPI extends HttpServlet {
     private final String ROL_ALU="rolalu";
     private final String ASIG_PATH = "asignaturas";
     private final String DETALLES_ASIG_PATH = "detallesasig";
-    private final String DNI_PATH = "dni";
     private final String CERT_PATH = "cert";
-
     private final String ACRONIMO_ASIG_PARAM = "acron";
     private final String ERR_ASIG = "La asignatura solicitada o no existe o el alumno no está matriculado en ella.";
     private final String ERR_DEFAULT = "No tienes permisos";
     private final int ERROR_CODE= 403;
     public AlumnosCEAPI() {
         super();
-        this.asigAlumnos= new ConcurrentHashMap<>();
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nombreMaquina = request.getServerName();
@@ -55,7 +51,6 @@ public class AlumnosCEAPI extends HttpServlet {
                 //Consultar la lista de asignaturas
                 //en las que está matriculada
                 url = "http://"+nombreMaquina+":9090/CentroEducativo/alumnos/"+dni+"/asignaturas?key="+key;
-
             } else if(param.equals(DETALLES_ASIG_PATH)) {
                 //Consulta la nota obtenida en una asignatura
                 String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
@@ -88,9 +83,6 @@ public class AlumnosCEAPI extends HttpServlet {
                 String content = "-1";
                 if(responseAPI.isSuccessful()) {
                     content = responseAPI.body().toString();
-                    if(alumnoIsSaved(dni) && param.equals("asignaturas")) {
-                        saveAlumno(dni, content);
-                    }
                     responseAPI.close();
                     response.getWriter().append(content);
 
@@ -108,17 +100,6 @@ public class AlumnosCEAPI extends HttpServlet {
 
     }
 
-    private boolean alumnoIsInAsig(String acron_asig,String dni){
-        return asigAlumnos.containsKey(dni) && asigAlumnos.get(dni).contains(acron_asig);
-    }
-    private boolean alumnoIsSaved(String dni){
-        return asigAlumnos.containsKey(dni);
-    }
-
-    private void saveAlumno(String dni,String acron_asig){
-        if(asigAlumnos.containsKey(dni)) asigAlumnos.put(dni,asigAlumnos.get(dni) + ","+acron_asig);
-        else asigAlumnos.put(dni,acron_asig);
-    }
 
 
 
