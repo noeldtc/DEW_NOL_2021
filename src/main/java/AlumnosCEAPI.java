@@ -1,3 +1,4 @@
+import okhttp3.CookieJar;
 import okhttp3.OkHttpClient;
 
 import okhttp3.Request;
@@ -18,21 +19,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AlumnosCEAPI extends HttpServlet {
 
     private Map<String,String> asigAlumnos;
-    private final String DEFAULT_ROLE = "algo";
     private final String QUERRY_PARAM = "args";
     private final String DNI_PARAM = "dni";
     private final String KEY_PARAM = "key";
-    private final String AVATAR_PATH = "avatar";
+
+    private final String ROL_ALU="rolalu";
+    private final String ROL_PROF= "rolprof";
     private final String ASIG_PATH = "asignaturas";
     private final String DETALLES_ASIG_PATH = "detallesasig";
     private final String DNI_PATH = "dni";
     private final String PROF_ASIG_PATH = "profsasig";
 
-    private final String PATH_IMAGES = "/WEB-INF/img";
     private final String ACRONIMO_ASIG_PARAM = "acron";
     private final String ERR_ASIG = "La asignatura solicitada o no existe o el alumno no está matriculado en ella.";
     private final String ERR_DEFAULT = "No tienes permisos";
-
+    private final int ERROR_CODE= 403;
     public AlumnosCEAPI() {
         super();
         this.asigAlumnos= new ConcurrentHashMap<>();
@@ -40,57 +41,46 @@ public class AlumnosCEAPI extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nombreMaquina = request.getServerName();
         HttpSession session = request.getSession(false);
-        List<Cookie> cookies = (List<Cookie>) session.getAttribute("cookie");
-        //TODO manejar las cookies
         String dni = session.getAttribute(DNI_PARAM).toString();
         String key = session.getAttribute(KEY_PARAM).toString();
 
         //Se inicia el cliente okhttp
         OkHttpClient httpClient = new OkHttpClient.Builder().build();
+
         String url = "";
-        if(request.isUserInRole(DEFAULT_ROLE)) {
+        if(request.isUserInRole(ROL_ALU)) {
             String param = request.getParameter(QUERRY_PARAM);
             response.setContentType("application/json");
-            if(param.equals(AVATAR_PATH)) {
-                JSONObject responseJSON = new JSONObject();
-
-                ServletContext context = getServletContext();
-                String pathToAvatar = context.getRealPath(PATH_IMAGES);
-                response.setContentType("text/plain");
-                response.setCharacterEncoding("UTF-8");
-                BufferedReader origen = new BufferedReader(new FileReader(pathToAvatar+"/"+dni+".pngb64"));
-
-                responseJSON.put(DNI_PARAM,dni);
-                PrintWriter out = response.getWriter();
-                String linea ="";
-                while ((linea += origen.readLine()) != null);
-                responseJSON.put("img",linea);
-                out.println(responseJSON.toString());
-                out.close(); origen.close();
-            }else if(param.equals(ASIG_PATH)) {
+            if(param.equals(ASIG_PATH)) {
+                //Obtiene las asignaturas del alumno
                 url = "http://"+nombreMaquina+":9090/CentroEducativo/alumnos/"+dni+"/asignaturas?key="+key;
 
             } else if(param.equals(DNI_PATH)) {
+                //Obtiene los detalles del aluno?
                 url = "http://"+nombreMaquina+":9090/CentroEducativo/alumnos/"+dni+"?key="+key;
             } else if(param.equals(DETALLES_ASIG_PATH)) {
+                //Consulta la nota obtenida en una asignatura
+                //String url ="http://dew-ecergon-2122.dsicv.upv.es:9090/CentroEducativo/asignaturas/DEW/alumnos?key=%27$key";
                 String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
                 if(alumnoIsInAsig(acronimo,dni)) {
                     url = "http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"?key="+key;
                 }else {
-                    response.sendError(403, ERR_ASIG);
+                    response.sendError(ERROR_CODE, ERR_ASIG);
                 }
-            }else if(param.equals(PROF_ASIG_PATH)) {
+            }else if(param.equals(DETALLES_ASIG_PATH)) {
+                //Detalles de la asignatura
                 String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
                 if(alumnoIsInAsig(acronimo,dni)) {
-                    url = "http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"/profesores?key="+key;
+                    url = "http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"?key="+key;
                 }else {
-                    response.sendError(403, ERR_ASIG);
+                    response.sendError(ERROR_CODE, ERR_ASIG);
                 }
+            }else if(param.equals(PROF_ASIG_PATH)) {
+                //Creación del certificado
             }
 
             if(!url.equals("")) {
                 Request requestHttp = new Request.Builder().url(url).addHeader("content-type","application/json").build();
-                //TODO añadir la cookie de la peticion al cliente.
                 Response responseAPI = httpClient.newCall(requestHttp).execute();
                 String content = "-1";
                 if(responseAPI.isSuccessful()) {
