@@ -39,7 +39,7 @@ public class AlumnosCEAPI extends HttpServlet {
         HttpSession session = request.getSession(false);
         String dni = session.getAttribute(DNI_PARAM).toString();
         String key = session.getAttribute(KEY_PARAM).toString();
-        String cookie = session.getAttribute("cookie").toString();
+        String cookie = session.getAttribute("Set-Cookie").toString();
         //Se inicia el cliente okhttp
         OkHttpClient httpClient = new OkHttpClient.Builder().build();
 
