@@ -39,7 +39,7 @@ public class AlumnosCEAPI extends HttpServlet {
         HttpSession session = request.getSession(false);
         String dni = session.getAttribute(DNI_PARAM).toString();
         String key = session.getAttribute(KEY_PARAM).toString();
-
+        String cookie = session.getAttribute("cookie").toString();
         //Se inicia el cliente okhttp
         OkHttpClient httpClient = new OkHttpClient.Builder().build();
 
@@ -55,7 +55,7 @@ public class AlumnosCEAPI extends HttpServlet {
                 //Consulta la nota obtenida en una asignatura
                 String acronimo = request.getParameter(ACRONIMO_ASIG_PARAM);
                 //Consulta las notas de la asignatura
-                Request consulta_notas = new Request.Builder().url("http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"/alumnos?key="+key).build();
+                Request consulta_notas = new Request.Builder().addHeader("Set-Cookie",cookie).url("http://"+nombreMaquina+":9090/CentroEducativo/asignaturas/"+acronimo+"/alumnos?key="+key).build();
                 Response responseNotas = httpClient.newCall(consulta_notas).execute();
                 if(responseNotas.isSuccessful()){
                     JSONArray notas = new JSONArray(responseNotas.body().string());
@@ -78,7 +78,7 @@ public class AlumnosCEAPI extends HttpServlet {
             }
 
             if(!url.equals("")) {
-                Request requestHttp = new Request.Builder().url(url).addHeader("content-type","application/json").build();
+                Request requestHttp = new Request.Builder().url(url).addHeader("Set-Cookie",cookie).addHeader("content-type","application/json").build();
                 Response responseAPI = httpClient.newCall(requestHttp).execute();
                 String content = "-1";
                 if(responseAPI.isSuccessful()) {
